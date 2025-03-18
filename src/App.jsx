@@ -28,14 +28,29 @@ const initialProducts = [
     totalRatings: 8
   }
 ];
-
 function App() {
 
- 
-
+const [products, setProducts] = useState(initialProducts);
+const handleRatingSubmit = (productId, newRating) => {
+  setProducts((prevProducts) =>
+    prevProducts.map((product) => {
+      if (product.id === productId) {
+        const newAvgRating = ((product.avgRating * product.totalRatings) + newRating) / (product.totalRatings + 1);
+        return {
+          ...product,
+          avgRating: parseFloat(newAvgRating.toFixed(1)), // Formatting to 1 decimal place
+          totalRatings: product.totalRatings + 1
+        };
+      }
+      return product;
+    })
+  );
+};
   return (
     <div>
-     {/* code here */}
+     {products.map((product) => (
+        <ProductCard key={product.id} product={product} onRatingSubmit={handleRatingSubmit} />
+      ))}
     </div>
   );
 }
